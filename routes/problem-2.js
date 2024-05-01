@@ -6,67 +6,56 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 router.get('/2', async (req, res) => {
-  // const prisma = new PrismaClient().$extends({
-  //   result: {
-  //     employee: {
-  //       "Salary Diff": {
-  //         needs: {
-  //           Branch_Branch_managerSINToEmployee: {
-  //             select: {
-  //               salary: true
-  //             }
-  //           },
-  //           salary: true
-  //         },
-  //         compute(employee) {
-  //           return 
-  //         }
-  //       }
-  //     }
-  //   }
-  // })
-  const answer0 = await prisma.employee.findMany({
-    select: {
-       Branch_Employee_branchNumberToBranch: {
-        select: {
-          managerSIN: true
-        },
-      },
-    },
-    where: {
-      OR: [ 
-        {
-          Branch_Employee_branchNumberToBranch: {
-            branchName: 'London'
-          }
-        },
-        {
-          Branch_Employee_branchNumberToBranch: {
-            branchName: 'Berlin'
+  const prisma = new PrismaClient().$extends({
+    result: {
+      employee: {
+        salary_diff: {
+          needs: {
+            Branch_Employee_branchNumberToBranch: {
+              select: {
+                Employee_Branch_managerSINToEmployee: {
+                  select: {
+                    salary: true
+                  }
+                }
+              }
+            },
+            salary: true
+          },
+          compute(employee) {
+            return { 
+              select: {
+                Branch_Employee_branchNumberToBranch: {
+                  select: {
+                    Employee_Branch_managerSINToEmployee: {
+                      select: {
+                        salary: true
+                      }
+                    }
+                  }
+                }
+              } 
+            }
           }
         }
-      ]
-    },
-  });
+      }
+    }
+  })
 
   const answer = await prisma.employee.findMany({
     // relationLoadStrategy: 'join',
     select: {
       sin: true,
-       Branch_Employee_branchNumberToBranch: { // join 의 핵심!
+      Branch_Employee_branchNumberToBranch: { // join 의 핵심!
         // alias 는 어떻게?
         select: {
           branchName: true
         },
       },
       salary: true,
-      Branch_Employee_branchNumberToBranch: {
-        select: {
-          managerSIN: true,
-          branchName: true
-        }
-      },
+      salary_diff: true
     },
+    
     where: {
       OR: [ 
         {
@@ -83,6 +72,7 @@ router.get('/2', async (req, res) => {
     },
     take: 10
   });
+    
   res.send(answer);
 });
 
