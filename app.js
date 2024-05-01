@@ -8,10 +8,12 @@ const prisma = new PrismaClient();
 const problem1Router = require('./routes/problem-1');
 const problem2Router = require('./routes/problem-2');
 const problem3Router = require('./routes/problem-3');
+const problem6Router = require('./routes/problem-6');
 
 app.use('/problem', problem1Router);
 app.use('/problem', problem2Router);
 app.use('/problem', problem3Router);
+app.use('/problem', problem6Router);
 
 app.get('/', (req, res) => {
   res.send('Home');
