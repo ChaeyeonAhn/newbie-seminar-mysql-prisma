@@ -8,24 +8,22 @@ const prisma = new PrismaClient();
 
 
 router.get('/3', async (req, res) => {
-  const max = await prisma.customer.aggregate({ // aggregate 를 꼭 써야
-      _max: {
-        income: true
+  const butler = await prisma.customer.findMany({ // aggregate 를 꼭 써야
+      where: {
+        lastName: 'Butler'
       }
-    
-  })
+  });
 
+  const max2 = butler.reduce((max, current) => {
+    const income2 = current.income * 2;
+    return income2 > max ? income2 : max;
+  }, 0);
 
-  const answer = await prisma.customer.findMany({
+  const select = await prisma.customer.findMany({
     select: {
       firstName: true,
       lastName: true,
       income: true
-    },
-    where: {
-      income: {
-        gte: max * 2
-        }    
     },
     orderBy: [
       {
@@ -34,10 +32,11 @@ router.get('/3', async (req, res) => {
       {
         firstName: 'asc',
       }
-    ],
-    take: 10
+    ]
   })
 
+  const gte = select.filter(e => (e.income > max2));
+  const answer = gte.slice(0, 10);
   res.send(answer);
 });
 
