@@ -11,6 +11,7 @@ const problem3Router = require('./routes/problem-3');
 const problem4Router = require('./routes/problem-4');
 const problem5Router = require('./routes/problem-5');
 const problem6Router = require('./routes/problem-6');
+const problem7Router = require('./routes/problem-7');
 
 const employee1Router = require('./routes/employee-join');
 
@@ -20,6 +21,7 @@ app.use('/problem', problem3Router);
 app.use('/problem', problem4Router);
 app.use('/problem', problem5Router);
 app.use('/problem', problem6Router);
+app.use('/problem', problem7Router);
 
 app.use('/employee', employee1Router);
 
