@@ -22,6 +22,7 @@ const problem18Router = require('./routes/problem-18');
 
 
 const employee1Router = require('./routes/employee-join');
+const employee2Router = require('./routes/employee-leave');
 
 app.use('/problem', problem1Router);
 app.use('/problem', problem2Router);
@@ -39,6 +40,7 @@ app.use('/problem', problem17Router);
 app.use('/problem', problem18Router);
 
 app.use('/employee', employee1Router);
+app.use('/employee', employee2Router);
 
 app.get('/', (req, res) => {
   res.send('chacha Assignment');
