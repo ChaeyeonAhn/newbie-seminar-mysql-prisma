@@ -6,20 +6,8 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 router.get('/6', async (req, res) => {
-  const answer = await prisma.account.findMany({
-    select: {
-      Branch: {
-        select: {
-          branchName: true
-        }
-      },
-      accNumber: true,
-      balance: true
-    },
+  const phillip_branch = await prisma.account.findMany({
     where: {
-      balance: {
-        gt: '100000', // 여기에 문제가 있어서 대소비교가 맞게 되지 않음
-      },
       Branch: {
         Employee_Branch_managerSINToEmployee: {
           firstName: 'Phillip',
@@ -27,11 +15,23 @@ router.get('/6', async (req, res) => {
         }
       }        
     },
-    orderBy: {
-      accNumber: 'asc'
-    },
-    take: 10
+
+    include: { // 필요한 애를 꼭 가져와 줘야 해
+      Branch: {
+        select: {
+          branchName: true
+        }
+      }
+    }
   });
+  
+  const filter_balance = phillip_branch.filter(a => parseFloat(a.balance) > 100000);
+  const answer0 = filter_balance.map(e => ({
+    branchName: e.Branch.branchName,
+    accNumber: e.accNumber,
+    balance: e.balance
+  })).sort((a, b) => a.accNumber - b.accNumber);
+  const answer = answer0.slice(0, 10);
   res.send(answer);
 });
 
