@@ -47,6 +47,7 @@ model Employee {
   lastName                             String?  @db.VarChar(20)
   salary                               Int?
   branchNumber                         Int?
+  disabled                             Int
   Branch_Branch_managerSINToEmployee   Branch[] @relation("Branch_managerSINToEmployee")
   Branch_Employee_branchNumberToBranch Branch?  @relation("Employee_branchNumberToBranch", fields: [branchNumber], references: [branchNumber], onDelete: NoAction, onUpdate: NoAction, map: "Employee_ibfk_1")
 

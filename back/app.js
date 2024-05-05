@@ -1,6 +1,19 @@
 const express = require('express');
 const app = express();
-const port = 3000;
+const cors = require('cors');
+const port = 8080;
+
+const whitelist = ['http://localhost:3000'];
+const corsOptions = {
+    origin: (origin, callback) => {
+        console.log('[REQUEST-CORS] Request from origin: ', origin);
+        if (!origin || whitelist.indexOf(origin) !== -1) callback(null, true)
+        else callback(new Error('Not Allowed by CORS'));
+    },
+    credentials: true,
+}
+
+app.use(cors(corsOptions));
 
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
@@ -22,9 +35,11 @@ const problem18Router = require('./routes/problem-18');
 const testRouter = require('./routes/test');
 
 const employee1Router = require('./routes/employee-join');
-const employee2Router = require('./routes/employee-leave');
+const employee2Router = require('./routes/employee-leave-hard');
+const employee2_1Router = require('./routes/employee-leave-soft');
 
 const depositRouter = require('./routes/account-deposit');
+const withdrawRouter = require('./routes/account-withdraw');
 
 app.use('/problem', problem1Router);
 app.use('/problem', problem2Router);
@@ -43,11 +58,11 @@ app.use('/problem', problem18Router);
 
 app.use('/employee', employee1Router);
 app.use('/employee', employee2Router);
+app.use('/employee', employee2_1Router);
 
 app.use('/account', depositRouter);
+app.use('/account', withdrawRouter);
 app.use('/test', testRouter);
-
-
 
 
 app.get('/', (req, res) => {

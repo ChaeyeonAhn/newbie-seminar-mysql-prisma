@@ -5,12 +5,12 @@ const router = express.Router();
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
-router.get('/deposit', async (req, res) => {
+router.get('/withdraw', async (req, res) => {
   res.send('Success!');
 });
 
 
-router.post('/1/deposit', async (req, res) => {
+router.post('/1/withdraw', async (req, res) => {
   try {
     const { firstName, lastName, accNumber, deposit } = req.body;
     
@@ -29,11 +29,13 @@ router.post('/1/deposit', async (req, res) => {
         balance: true
       }
     });
-    const new1 = previous + deposit;
+    if (previous < withdraw) return res.json({data: 'failed'});
+    
+    const new1 = previous - withdraw;
     console.log(new1);
 
     if ((firstName == 'Benjamin') && (lastName == 'Green')){
-      const depositMoney = await prisma.account.update({
+      const withdrawMoney = await prisma.account.update({
         where: {
           accNumber: accNumber
         },

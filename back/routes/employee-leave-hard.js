@@ -5,7 +5,7 @@ const router = express.Router();
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
-router.get('/leave', async (req, res) => {
+router.get('/leave/hard', async (req, res) => {
   try {
     const newUser = await prisma.employee.delete({
       where: {

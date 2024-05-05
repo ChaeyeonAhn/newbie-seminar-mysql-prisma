@@ -14,7 +14,8 @@ router.get('/join', async (req, res) => {
         firstName: 'chacha',
         lastName: 'Ahn',
         salary: 0,
-        branchNumber: 1
+        branchNumber: 1,
+        disabled: 0
       }
     });
     console.log('Success!');
